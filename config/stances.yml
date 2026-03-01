@@ -1,0 +1,90 @@
+# Source Stance Configuration
+# Scale: 1 (strongly disagree) to 5 (strongly agree)
+# This influences how the content composition engine treats the source material
+
+stances:
+  # Mostly agree (4) — adopt their framing, expand, add context
+  mostly_agree:
+    level: 4
+    description: "We broadly agree. Report as our own, add depth and historical framing."
+    composition_notes: "Lead with agreement, find the 'wait one second' nuance, expand."
+    sources:
+      - id: nate-b-jones
+        url: "https://www.youtube.com/@NateBJones"
+        notes: "Strong political analysis, good instincts"
+      - id: novara-media
+        url: "https://www.youtube.com/@NovaraMedia"
+        notes: "UK left perspective, good structural analysis"
+      - id: heather-cox-richardson
+        url: "https://www.youtube.com/@heathercoxrichardson"
+        notes: "Historical framing of current events, well-sourced"
+      - id: james-talarico
+        url: "https://www.youtube.com/@jamestalaricoTX"
+        notes: "Texas politics, faith and politics intersection"
+      - id: philosophize-this
+        url: "https://philosophizethis.substack.com/"
+        notes: "Philosophy made accessible, good synthesis"
+      - id: the-walrus
+        url: "https://thewalrusca.substack.com/"
+        notes: "Canadian long-form journalism"
+      - id: doomscroll-podcast
+        url: "https://www.youtube.com/@doomscrollpodcast"
+        notes: "Current events analysis"
+      - id: kvetch
+        url: "https://www.kvetch.au/"
+        notes: "Australian perspective, sharp analysis"
+      - id: close-reading-poetry
+        url: "https://www.youtube.com/@closereadingpoetry"
+        notes: "Literary analysis, poetry deep dives"
+
+  # Agree with skepticism (3) — engage but maintain critical distance
+  agree_with_skepticism:
+    level: 3
+    description: "Interesting perspectives but maintain critical distance. Question premises."
+    composition_notes: "Engage seriously but look for assumptions. Frame their claims as hypotheses."
+    sources:
+      - id: dwarkesh-patel
+        url: "https://www.youtube.com/@DwarkeshPatel"
+        notes: "Tech/AI interviews, sometimes too Silicon Valley optimistic"
+      - id: three-blue-one-brown
+        url: "https://www.youtube.com/@3blue1brown"
+        notes: "Math education, excellent visualization — factual, less stance-relevant"
+      - id: ai-explained
+        url: "https://www.youtube.com/@aiexplained-official"
+        notes: "AI coverage, sometimes hype-adjacent"
+      - id: patrick-boyle
+        url: "https://www.youtube.com/@PBoyle"
+        notes: "Finance/Epstein coverage, solid research"
+      - id: anthropic-ai
+        url: "https://www.youtube.com/@anthropic-ai"
+        notes: "AI safety perspective — corporate interest acknowledged"
+      - id: prof-jeffrey-kaplan
+        url: "https://www.youtube.com/@profjeffreykaplan"
+        notes: "Philosophy lectures, academic perspective"
+
+  # Neutral analytical (2.5) — news source, factual, our framing
+  neutral_analytical:
+    level: 2.5
+    description: "Factual source. We provide all the framing and analysis ourselves."
+    composition_notes: "Use as raw material. All interpretation and framing is ours."
+    sources:
+      - id: texas-tribune
+        url: "https://www.texastribune.org/"
+        notes: "Texas news, nonpartisan, factual reporting"
+
+  # Disagree substantially (1) — engage critically, find what's wrong
+  disagree_substantially:
+    level: 1
+    description: "We substantially disagree. Challenge premises, find the flaw in the reasoning."
+    composition_notes: >
+      Lead with what they get right (intellectual honesty), then dismantle.
+      Name the circular reasoning, the smuggled premises, the selective evidence.
+      Never straw-man — engage with the strongest version of their argument.
+    sources:
+      - id: sam-harris
+        url: "https://www.youtube.com/@samharrisorg"
+        notes: >
+          Rationalist who thinks he's beyond ideology.
+          Scientism dressed as objectivity. Selective empathy.
+          The 'I'm just following the evidence' move that conveniently
+          always arrives at establishment-compatible conclusions.

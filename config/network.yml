@@ -1,0 +1,40 @@
+# Global network configuration
+network:
+  name: "Lluminate Network"
+  language: en
+  timezone: America/Chicago
+
+# Content freshness — how old a source can be and still be used
+freshness:
+  news_max_hours: 72          # News sources: max 3 days old
+  analysis_max_hours: 168     # Analysis/long-form: max 7 days old
+  evergreen_max_hours: 720    # Evergreen content: max 30 days old
+
+# Daily targets
+daily:
+  posts_per_channel: 1        # Minimum posts per channel per day
+  max_posts_per_channel: 3    # Maximum posts per channel per day
+  human_time_budget_minutes: 60  # Target max human involvement
+
+# Image generation defaults
+image:
+  provider: gemini_nano_banana
+  model: gemini-2.0-flash-exp  # Nano Banana 2
+  style: charcoal_drawing
+  default_prompt_suffix: "hand drawn charcoal drawing style, no text in image, black and white, textured paper, expressive lines"
+  crop_watermark: true
+  crop_percent: 90
+  output_format: png
+  output_width: 1920
+  output_height: 1080
+
+# Gemini content generation
+gemini:
+  model: gemini-2.5-pro-preview-05-06
+  temperature: 0.7
+  max_output_tokens: 8192
+
+# Source tracking
+tracking:
+  prevent_reuse_on_same_channel: true
+  min_days_before_revisit: 30  # Can revisit a source after 30 days

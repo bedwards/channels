@@ -1,0 +1,44 @@
+name: "Signal Drift"
+platform: youtube
+schedule: daily
+description: "AI, finance, and the future — tracking where the signal goes"
+
+sources:
+  primary:
+    - id: doomscroll-podcast
+      type: youtube
+      url: "https://www.youtube.com/@doomscrollpodcast"
+      stance: 4
+    - id: ai-explained
+      type: youtube
+      url: "https://www.youtube.com/@aiexplained-official"
+      stance: 3
+    - id: patrick-boyle
+      type: youtube
+      url: "https://www.youtube.com/@PBoyle"
+      stance: 3
+  backup:
+    - id: fireship
+      type: youtube
+      url: "https://www.youtube.com/@Fireship"
+      stance: 3
+    - id: two-minute-papers
+      type: youtube
+      url: "https://www.youtube.com/@TwoMinutePapers"
+      stance: 3
+
+format:
+  plugin: notebooklm_video
+  style: deep_dive
+  visual_style: "Deep Dive"
+
+publish:
+  plugin: youtube
+  channel_id: ""
+
+discovery_keywords:
+  - "AI news"
+  - "artificial intelligence"
+  - "finance analysis"
+  - "tech industry"
+  - "machine learning"

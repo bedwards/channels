@@ -1,0 +1,35 @@
+name: "The Undertow"
+platform: youtube
+schedule: daily
+description: "The currents beneath the surface — audio deep dives with charcoal art"
+
+sources:
+  primary:
+    - id: lluminate-substack
+      type: substack
+      url: "https://lluminate.substack.com/"
+      stance: 5
+  backup:
+    - id: the-atlantic
+      type: web
+      url: "https://www.theatlantic.com/"
+      stance: 3
+    - id: current-affairs
+      type: web
+      url: "https://www.currentaffairs.org/"
+      stance: 4
+
+format:
+  plugin: notebooklm_audio
+  style: deep_dive
+  generate_image: true
+  image_style: charcoal
+
+publish:
+  plugin: youtube
+  channel_id: ""
+
+discovery_keywords:
+  - "long form essay"
+  - "political analysis"
+  - "cultural criticism"

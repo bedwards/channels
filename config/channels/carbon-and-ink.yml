@@ -1,0 +1,35 @@
+name: "Carbon & Ink"
+platform: substack
+schedule: daily
+description: "Sharp political analysis with hand-drawn charcoal illustrations"
+
+sources:
+  primary:
+    - id: novara-media
+      type: youtube
+      url: "https://www.youtube.com/@NovaraMedia"
+      stance: 4
+  backup:
+    - id: owen-jones
+      type: youtube
+      url: "https://www.youtube.com/@OwenJonesTalks"
+      stance: 4
+    - id: double-down-news
+      type: youtube
+      url: "https://www.youtube.com/@DoubleDownNews"
+      stance: 3
+
+format:
+  plugin: substack_essay
+  image_style: charcoal
+  image_prompt_prefix: "hand drawn charcoal sketch"
+
+publish:
+  plugin: substack
+  subdomain: "carbonandink"
+
+discovery_keywords:
+  - "UK politics"
+  - "left analysis"
+  - "media criticism"
+  - "political economy"

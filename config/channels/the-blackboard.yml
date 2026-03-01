@@ -1,0 +1,44 @@
+name: "The Blackboard"
+platform: youtube
+schedule: daily
+description: "Math, AI, and ideas worth understanding — the educational deep dive"
+
+sources:
+  primary:
+    - id: three-blue-one-brown
+      type: youtube
+      url: "https://www.youtube.com/@3blue1brown"
+      stance: 3
+    - id: anthropic-ai
+      type: youtube
+      url: "https://www.youtube.com/@anthropic-ai"
+      stance: 3
+    - id: prof-jeffrey-kaplan
+      type: youtube
+      url: "https://www.youtube.com/@profjeffreykaplan"
+      stance: 3
+  backup:
+    - id: veritasium
+      type: youtube
+      url: "https://www.youtube.com/@veritasium"
+      stance: 3
+    - id: primer
+      type: youtube
+      url: "https://www.youtube.com/@PrimerBlobs"
+      stance: 3
+
+format:
+  plugin: notebooklm_video
+  style: deep_dive
+  visual_style: "Explainer"
+
+publish:
+  plugin: youtube
+  channel_id: ""
+
+discovery_keywords:
+  - "math education"
+  - "AI safety"
+  - "philosophy education"
+  - "science education"
+  - "machine learning explainer"

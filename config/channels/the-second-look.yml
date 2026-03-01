@@ -1,0 +1,34 @@
+name: "The Second Look"
+platform: youtube
+schedule: daily
+description: "Political analysis revisited — what you missed the first time"
+
+sources:
+  primary:
+    - id: nate-b-jones
+      type: youtube
+      url: "https://www.youtube.com/@NateBJones"
+      stance: 4
+  backup:
+    - id: breaking-points
+      type: youtube
+      url: "https://www.youtube.com/@BreakingPoints"
+      stance: 3
+    - id: majority-report
+      type: youtube
+      url: "https://www.youtube.com/@TheMajorityReport"
+      stance: 3
+
+format:
+  plugin: notebooklm_video
+  style: deep_dive
+  visual_style: "Deep Dive"
+
+publish:
+  plugin: youtube
+  channel_id: ""
+
+discovery_keywords:
+  - "US politics analysis"
+  - "political commentary"
+  - "policy analysis"

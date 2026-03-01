@@ -1,0 +1,39 @@
+name: "Lone Star Dispatch"
+platform: youtube
+schedule: daily
+description: "Texas politics and policy — deep dives from the heart of it"
+
+sources:
+  primary:
+    - id: texas-tribune
+      type: web
+      url: "https://www.texastribune.org/"
+      stance: 2.5
+    - id: james-talarico
+      type: youtube
+      url: "https://www.youtube.com/@jamestalaricoTX"
+      stance: 4
+  backup:
+    - id: texas-observer
+      type: web
+      url: "https://www.texasobserver.org/"
+      stance: 3
+    - id: reform-austin
+      type: web
+      url: "https://www.reformaustin.org/"
+      stance: 3
+
+format:
+  plugin: notebooklm_video
+  style: deep_dive
+  visual_style: "Deep Dive"
+
+publish:
+  plugin: youtube
+  channel_id: ""
+
+discovery_keywords:
+  - "Texas politics"
+  - "Texas legislature"
+  - "Texas policy"
+  - "Christian nationalism"

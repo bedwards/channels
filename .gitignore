@@ -1,0 +1,42 @@
+# Environment
+.env
+.env.local
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+.eggs/
+*.egg
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Data (generated, not committed)
+data/channels.db
+data/content/
+data/cache/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Auth tokens
+tokens/
+*.token
+*.pickle
+
+# Logs
+logs/
+*.log

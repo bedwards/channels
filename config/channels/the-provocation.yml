@@ -1,0 +1,49 @@
+name: "The Provocation"
+platform: substack
+schedule: daily
+description: "Where we disagree — and why it matters"
+
+sources:
+  primary:
+    - id: kvetch
+      type: substack
+      url: "https://www.kvetch.au/"
+      stance: 4
+    - id: the-walrus
+      type: substack
+      url: "https://thewalrusca.substack.com/"
+      stance: 4
+    - id: sam-harris
+      type: youtube
+      url: "https://www.youtube.com/@samharrisorg"
+      stance: 1
+  backup:
+    - id: triggernometry
+      type: youtube
+      url: "https://www.youtube.com/@Triggernom"
+      stance: 2
+    - id: quillette
+      type: web
+      url: "https://quillette.com/"
+      stance: 2
+
+format:
+  plugin: substack_essay
+  image_style: charcoal
+  tone: contrarian
+  notes: >
+    This channel has the most disagreement in its source mix.
+    Sam Harris is stance 1 — lead with what he gets right, then dismantle.
+    Kvetch and Walrus are mostly-agree allies. Use them as counterweight.
+
+publish:
+  plugin: substack
+  subdomain: "theprovocation"
+
+discovery_keywords:
+  - "Sam Harris critique"
+  - "rationalism criticism"
+  - "free speech debate"
+  - "intellectual dark web"
+  - "Australian commentary"
+  - "Canadian journalism"

@@ -1,0 +1,38 @@
+name: "Slow Frequencies"
+platform: youtube
+schedule: daily
+description: "Philosophy and poetry — ideas that hum beneath the noise"
+
+sources:
+  primary:
+    - id: philosophize-this
+      type: substack
+      url: "https://philosophizethis.substack.com/"
+      stance: 4
+    - id: close-reading-poetry
+      type: youtube
+      url: "https://www.youtube.com/@closereadingpoetry"
+      stance: 4
+  backup:
+    - id: then-now
+      type: youtube
+      url: "https://www.youtube.com/@ThenNow"
+      stance: 3
+    - id: overthink
+      type: youtube
+      url: "https://www.youtube.com/@overthinkpodcast"
+      stance: 3
+
+format:
+  plugin: notebooklm_audio
+  style: deep_dive
+
+publish:
+  plugin: youtube
+  channel_id: ""
+
+discovery_keywords:
+  - "philosophy podcast"
+  - "poetry analysis"
+  - "continental philosophy"
+  - "ethics"
