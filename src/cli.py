@@ -63,44 +63,42 @@ def cmd_ingest(args):
             print(f"\n{item.content[:500]}...")
 
 
-def cmd_compose(args):
-    """Compose content for a channel."""
-    from src.core.config import ConfigLoader
-    from src.core.models import Channel, FormatType, Platform
-    from src.compose.writer import ContentComposer
-    from src.ingest.discovery import SourceDiscovery
+def cmd_prepare(args):
+    """Prepare sources for agent composition."""
+    from src.compose.prepare import SourcePreparer
+    preparer = SourcePreparer()
+    brief_path = preparer.prepare(args.channel, max_sources=args.count)
+    print(f"\n  📋 Brief ready for agent composition: {brief_path}")
+    print(f"  💡 Read the brief, compose the piece, save to:")
+    print(f"     data/output/{args.channel}/{brief_path.parent.name}/draft.md")
 
-    config = ConfigLoader()
-    channel_config = config.load_channel(args.channel)
 
-    channel = Channel(
-        slug=args.channel,
-        name=channel_config["name"],
-        platform=Platform(channel_config["platform"]),
-        format_type=FormatType(channel_config["format"]["plugin"]),
-    )
+def cmd_verify(args):
+    """Verify composed content against guidelines."""
+    from pathlib import Path
+    from src.verify.checker import ContentChecker
+    from src.verify.stats import ContentStats
 
-    discovery = SourceDiscovery(config)
-    source_items = discovery.find_fresh_sources(args.channel, needed_count=2)
-
-    if not source_items:
-        print("❌ No fresh sources found")
+    path = Path(args.path)
+    if not path.exists():
+        print(f"❌ File not found: {path}")
         return
 
-    print(f"✅ Found {len(source_items)} source(s)")
-    for item in source_items:
-        print(f"  → {item.title}")
+    content = path.read_text()
+    channel = args.channel or path.parent.parent.name
 
-    if args.dry_run:
-        return
+    # Run quality checks
+    checker = ContentChecker()
+    report = checker.check(content, channel)
+    checker.print_report(report)
 
-    composer = ContentComposer(config)
-    piece = composer.compose(channel, source_items)
-    print(f"\n{'═' * 60}")
-    print(f"📝 {piece.title}")
-    print(f"{'─' * 60}")
-    print(piece.draft_content[:1000])
-    print(f"\n... ({len(piece.draft_content)} total characters)")
+    # Run statistics
+    stats_obj = ContentStats()
+    stats = stats_obj.analyze(content, channel)
+    stats_obj.print_stats(stats)
+
+    # Record stats for tracking
+    stats_obj.record(stats)
 
 
 def cmd_publish(args):
@@ -283,11 +281,17 @@ def main():
     ingest_parser.add_argument("--show-content", action="store_true")
     ingest_parser.set_defaults(func=cmd_ingest)
 
-    # compose
-    compose_parser = subparsers.add_parser("compose", help="Compose content for a channel")
-    compose_parser.add_argument("channel", help="Channel slug")
-    compose_parser.add_argument("--dry-run", action="store_true")
-    compose_parser.set_defaults(func=cmd_compose)
+    # prepare
+    prepare_parser = subparsers.add_parser("prepare", help="Prepare sources for agent composition")
+    prepare_parser.add_argument("channel", help="Channel slug")
+    prepare_parser.add_argument("--count", type=int, default=3, help="Max sources to gather")
+    prepare_parser.set_defaults(func=cmd_prepare)
+
+    # verify
+    verify_parser = subparsers.add_parser("verify", help="Verify composed content quality")
+    verify_parser.add_argument("path", help="Path to draft.md file")
+    verify_parser.add_argument("--channel", help="Channel slug (auto-detected from path)")
+    verify_parser.set_defaults(func=cmd_verify)
 
     # publish
     publish_parser = subparsers.add_parser("publish", help="Publish to a channel")

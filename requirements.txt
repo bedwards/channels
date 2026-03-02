@@ -4,8 +4,8 @@ feedparser>=6.0
 requests>=2.31
 beautifulsoup4>=4.12
 
-# Google AI
-google-generativeai>=0.8
+# Google AI (new SDK)
+google-genai>=1.0
 
 # YouTube API
 google-api-python-client>=2.100
