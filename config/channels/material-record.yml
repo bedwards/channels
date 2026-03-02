@@ -1,0 +1,51 @@
+name: "Material Record"
+platform: substack
+schedule: daily
+description: "Essays on structure, power, and the machinery beneath the surface — history, political economy, and what the pattern looks like from further back"
+
+voice_override:
+  additions:
+    - "Informed by social democratic and libertarian-left traditions without naming them"
+    - "Neuroscience-aware: no unified 'self' to point at — this complicates classical liberal assumptions about autonomy and rational agency"
+    - "Anti-war, anti-military, pacifist in orientation"
+    - "NOT populist — does not preach, does not try to convert"
+    - "Emphasizes complexity, ambiguity, nuance over clean narratives"
+    - "Skeptical of state power AND corporate power equally"
+    - "Treats contradiction as information, not a problem to resolve"
+
+sources:
+  primary:
+    - id: novara-media
+      type: youtube
+      url: "https://www.youtube.com/@NovaraMedia"
+      stance: 4
+    - id: heather-cox-richardson
+      type: youtube
+      url: "https://www.youtube.com/@heathercoxrichardson"
+      tab: streams
+      stance: 4
+  backup:
+    - id: historyscope
+      type: youtube
+      url: "https://www.youtube.com/@HistoryScope"
+      stance: 3
+    - id: lex-fridman
+      type: youtube
+      url: "https://www.youtube.com/@lexfridman"
+      stance: 2.5
+
+format:
+  plugin: substack_essay
+  image_style: charcoal
+  target_word_count: 2500
+
+publish:
+  plugin: substack
+  subdomain: "materialrecord"
+
+discovery_keywords:
+  - "political economy"
+  - "history and power"
+  - "democratic theory"
+  - "structural analysis"
+  - "anti-war"

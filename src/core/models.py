@@ -54,6 +54,7 @@ class Source:
     url: str
     name: str = ""
     stance_level: float = 3.0      # 1-5 agreement scale
+    tab: str = "videos"            # YouTube tab: "videos" or "streams" (lives only)
     last_checked: Optional[datetime] = None
     check_interval_hours: int = 6
 

@@ -27,8 +27,9 @@ class YouTubeIngester(BaseIngester):
         since_hours: Optional[int] = None
     ) -> list[SourceItem]:
         """Fetch latest video transcripts from a YouTube channel."""
-        # Get video list from channel
-        videos = self._list_channel_videos(source.url, max_items)
+        # Get video list from channel (respects source.tab for streams vs videos)
+        tab = getattr(source, 'tab', 'videos')
+        videos = self._list_channel_videos(source.url, max_items, tab=tab)
 
         items = []
         for video in videos:
@@ -54,15 +55,20 @@ class YouTubeIngester(BaseIngester):
         return self._download_transcript(video_info, source)
 
     def _list_channel_videos(
-        self, channel_url: str, max_items: int = 10
+        self, channel_url: str, max_items: int = 10,
+        tab: str = "videos"
     ) -> list[dict]:
-        """List latest videos from a channel without downloading."""
+        """List latest videos from a channel without downloading.
+
+        Args:
+            tab: YouTube tab — 'videos' (default) or 'streams' (lives only)
+        """
         cmd = [
             "yt-dlp",
             "--flat-playlist",
             "--print", "%(id)s|||%(title)s|||%(upload_date)s|||%(url)s",
             "--playlist-end", str(max_items),
-            f"{channel_url}/videos",
+            f"{channel_url}/{tab}",
         ]
 
         try:

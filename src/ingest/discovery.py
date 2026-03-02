@@ -47,6 +47,7 @@ class SourceDiscovery:
                 source_type=SourceType(src_config["type"]),
                 url=src_config["url"],
                 stance_level=src_config.get("stance", 3),
+                tab=src_config.get("tab", "videos"),
             )
             ingester = PluginRegistry.create("ingester", src_config["type"])
             network = self.config.load_network()
@@ -72,6 +73,7 @@ class SourceDiscovery:
                 source_type=SourceType(src_config["type"]),
                 url=src_config["url"],
                 stance_level=src_config.get("stance", 3),
+                tab=src_config.get("tab", "videos"),
             )
             from src.core.registry import PluginRegistry
             ingester = PluginRegistry.create("ingester", src_config["type"])

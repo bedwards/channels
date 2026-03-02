@@ -9,6 +9,10 @@ sources:
       type: youtube
       url: "https://www.youtube.com/@NateBJones"
       stance: 4
+    - id: dwarkesh-patel
+      type: youtube
+      url: "https://www.youtube.com/@DwarkeshPatel"
+      stance: 3
     - id: doomscroll-podcast
       type: youtube
       url: "https://www.youtube.com/@doomscrollpodcast"
