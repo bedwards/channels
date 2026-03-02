@@ -151,26 +151,36 @@ def cmd_publish(args):
     print(f"  📝 Title: {title}")
     print(f"  📄 Subtitle: {subtitle}")
 
-    # Crop bottom 10% of video to remove NotebookLM watermark
+    # Crop bottom 10% + trim last 3 seconds (removes NotebookLM watermark + outro)
     if video_path:
         import subprocess
         cropped_path = media_path.parent / "video_cropped.mp4"
         if not cropped_path.exists():
-            print(f"  ✂️  Cropping bottom 10% to remove watermark...")
+            # Get video duration
+            probe = subprocess.run(
+                ["ffprobe", "-v", "error", "-show_entries", "format=duration",
+                 "-of", "csv=p=0", str(media_path)],
+                capture_output=True, text=True,
+            )
+            duration = float(probe.stdout.strip())
+            trimmed_duration = max(duration - 3.0, 1.0)
+
+            print(f"  ✂️  Cropping bottom 10% + trimming last 3s ({duration:.1f}s → {trimmed_duration:.1f}s)...")
             subprocess.run(
                 ["ffmpeg", "-y", "-i", str(media_path),
+                 "-t", str(trimmed_duration),
                  "-vf", "crop=in_w:in_h*0.90:0:0,scale=1280:720",
                  "-c:v", "libx264", "-preset", "fast", "-crf", "20",
                  "-c:a", "copy", str(cropped_path)],
                 capture_output=True,
             )
             if cropped_path.exists():
-                # Replace original with cropped
+                # Replace original with processed version
                 media_path.unlink()
                 cropped_path.rename(media_path)
-                print(f"  ✅ Cropped: {media_path} ({media_path.stat().st_size / 1024 / 1024:.1f} MB)")
+                print(f"  ✅ Processed: {media_path} ({media_path.stat().st_size / 1024 / 1024:.1f} MB)")
             else:
-                print(f"  ⚠️  Crop failed, using original")
+                print(f"  ⚠️  Processing failed, using original")
 
     # Auto-extract thumbnail from video with ffmpeg (5s in, past fade-in)
     thumbnail_path = media_path.parent / "thumbnail.jpg"

@@ -49,6 +49,13 @@ Never use: delve, unpack, impactful, synergy, game-changer, paradigm shift, robu
 - Reference specific segments, data points, and the lingering question you want them to end on.
 - Download the video and save to `data/output/<channel>/<date>/video.mp4`.
 
+### NotebookLM Video Post-Processing (ALWAYS)
+- **Crop bottom 10%** — removes NotebookLM watermark. ffmpeg: `crop=in_w:in_h*0.90:0:0`
+- **Trim last 3 seconds** — removes NotebookLM outro. ffmpeg: `-t <duration-3>`
+- **Re-scale to 1280×720** after crop. ffmpeg: `scale=1280:720`
+- The `publish` CLI does all three automatically in a single ffmpeg pass.
+- Do NOT crop sides or top — only bottom.
+
 ## DevOps
 
 ### Dependencies
@@ -82,3 +89,6 @@ Never use: delve, unpack, impactful, synergy, game-changer, paradigm shift, robu
 5. **Browser checks work but `curl` is faster** for checking URL availability (YouTube handles, Substack subdomains).
 6. **Don't use GOOGLE_API_KEY from .env for content generation.** The user has Google AI Ultra subscription — the agent (me) does the writing.
 7. **`datetime.utcnow()` is deprecated in Python 3.12+.** Use `datetime.now(datetime.UTC)` instead.
+8. **NotebookLM videos have a watermark + outro.** Always crop bottom 10% and trim last 3 seconds before uploading.
+9. **YouTube custom thumbnails require phone verification.** Verify at youtube.com/verify before first upload.
+10. **YouTube OAuth needs `youtube` scope (not just `youtube.upload`)** to set thumbnails.
