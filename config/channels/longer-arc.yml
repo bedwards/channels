@@ -1,4 +1,4 @@
-name: "The Longer Arc"
+name: "Longer Arc"
 platform: substack
 schedule: daily
 description: "Long-form essays on history, technology, and the shape of things to come"
@@ -30,7 +30,7 @@ format:
 
 publish:
   plugin: substack
-  subdomain: "thelongerarc"
+  subdomain: "longerarc"
 
 discovery_keywords:
   - "American history"

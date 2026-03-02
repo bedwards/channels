@@ -1,4 +1,4 @@
-name: "The Provocation"
+name: "Raw Provocation"
 platform: substack
 schedule: daily
 description: "Where we disagree — and why it matters"
@@ -38,7 +38,7 @@ format:
 
 publish:
   plugin: substack
-  subdomain: "theprovocation"
+  subdomain: "rawprovocation"
 
 discovery_keywords:
   - "Sam Harris critique"

@@ -1,15 +1,10 @@
-name: "The Second Look"
+name: "Hindsight Politics"
 platform: youtube
 schedule: daily
-description: "Political analysis revisited — what you missed the first time"
+description: "Political analysis with the benefit of perspective — what it means, who benefits, and what nobody wants to say out loud"
 
 sources:
   primary:
-    - id: nate-b-jones
-      type: youtube
-      url: "https://www.youtube.com/@NateBJones"
-      stance: 4
-  backup:
     - id: breaking-points
       type: youtube
       url: "https://www.youtube.com/@BreakingPoints"
@@ -18,17 +13,28 @@ sources:
       type: youtube
       url: "https://www.youtube.com/@TheMajorityReport"
       stance: 3
+  backup:
+    - id: david-pakman
+      type: youtube
+      url: "https://www.youtube.com/@taborbridge"
+      stance: 3
+    - id: second-thought
+      type: youtube
+      url: "https://www.youtube.com/@SecondThought"
+      stance: 4
 
 format:
   plugin: notebooklm_video
   style: deep_dive
   visual_style: "Deep Dive"
+  image_style: charcoal_banana
 
 publish:
   plugin: youtube
-  channel_id: ""
+  channel_id: "UCERhjVTmUSphl7L5Ld3MCqA"
 
 discovery_keywords:
   - "US politics analysis"
   - "political commentary"
   - "policy analysis"
+  - "political hindsight"

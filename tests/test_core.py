@@ -57,7 +57,7 @@ class TestConfigLoader:
         config = ConfigLoader()
         channels = config.load_all_channels()
         assert len(channels) >= 9
-        assert "the-second-look" in channels
+        assert "hindsight-politics" in channels
         assert "carbon-and-ink" in channels
 
     def test_cache_and_reload(self):

@@ -6,15 +6,15 @@ An autonomous content production system that ingests from diverse sources (YouTu
 
 | Channel | Source(s) | Platform | Format |
 |---------|-----------|----------|--------|
-| **The Second Look** | @NateBJones | YouTube | Video Overview |
+| **Hindsight Politics** | Breaking Points + Majority Report | YouTube | Video Overview |
 | **Carbon & Ink** | @NovaraMedia | Substack | Essay + charcoal art |
-| **The Undertow** | Lluminate Substack | YouTube | Audio Overview |
+| **Undertow** | Lluminate Substack | YouTube | Audio Overview |
 | **Lone Star Dispatch** | Texas Tribune + @jamestalaricoTX | YouTube | Video Overview |
-| **The Longer Arc** | @heathercoxrichardson + @DwarkeshPatel | Substack | Long-form essay |
+| **Longer Arc** | @heathercoxrichardson + @DwarkeshPatel | Substack | Long-form essay |
 | **Slow Frequencies** | Philosophize This + @closereadingpoetry | YouTube | Audio Overview |
-| **The Provocation** | Kvetch + The Walrus + @samharrisorg | Substack | Contrarian essay |
-| **Signal Drift** | @doomscrollpodcast + @aiexplained + @PBoyle | YouTube | Video Overview |
-| **The Blackboard** | @3blue1brown + @anthropic-ai + @profjeffreykaplan | YouTube | Video Overview |
+| **Raw Provocation** | Kvetch + The Walrus + @samharrisorg | Substack | Contrarian essay |
+| **Noise Floor** | @NateBJones + @doomscrollpodcast + @aiexplained + @PBoyle | YouTube | Video Overview |
+| **Chalk & Wire** | @3blue1brown + @anthropic-ai + @profjeffreykaplan | YouTube | Video Overview |
 
 ## Quick Start
 

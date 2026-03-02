@@ -1,10 +1,14 @@
-name: "Signal Drift"
+name: "Noise Floor"
 platform: youtube
 schedule: daily
-description: "AI, finance, and the future — tracking where the signal goes"
+description: "AI, finance, and the signals everyone's ignoring — cuts through the hype to find what's actually changing"
 
 sources:
   primary:
+    - id: nate-b-jones
+      type: youtube
+      url: "https://www.youtube.com/@NateBJones"
+      stance: 4
     - id: doomscroll-podcast
       type: youtube
       url: "https://www.youtube.com/@doomscrollpodcast"
