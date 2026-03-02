@@ -2,6 +2,8 @@
 .env
 .env.local
 
+*.mp4
+
 # Python
 __pycache__/
 *.py[cod]
