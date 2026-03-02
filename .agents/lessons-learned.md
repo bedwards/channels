@@ -92,3 +92,8 @@ Never use: delve, unpack, impactful, synergy, game-changer, paradigm shift, robu
 8. **NotebookLM videos have a watermark + outro.** Always crop bottom 10% and trim last 3 seconds before uploading.
 9. **YouTube custom thumbnails require phone verification.** Verify at youtube.com/verify before first upload.
 10. **YouTube OAuth needs `youtube` scope (not just `youtube.upload`)** to set thumbnails.
+11. **Always use Antigravity artifacts for ephemeral user instructions.** Setup steps, metadata to copy, action items — put them in an artifact so they appear in the Agent Manager right panel. Text in the chat stream gets lost.
+12. **Graphyard database is on `studio` host (192.168.4.50).** Database: `graphyard`, user: `postgres`, password: `postgres`. 79 tables across schemas: `atrocity_economics`, `boomcession`, `costs_of_war`, `tax_burden`, `democide`, `ucdp`, `tbij`, `baseball`, `lahman`, `health`, `cow`, etc.
+13. **Data stack is polars + altair + plotly**, not pandas + matplotlib. Check `pyproject.toml` in graphyard for exact deps.
+14. **Every Substack article needs a Gemini-generated header image.** No exceptions.
+15. **Each publication sticks to ONE post type** (text, audio, video, etc.). Assigned at channel config level. Currently all text, but designed for future type diversity.
