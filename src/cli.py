@@ -151,15 +151,15 @@ def cmd_publish(args):
     print(f"  📝 Title: {title}")
     print(f"  📄 Subtitle: {subtitle}")
 
-    # Center-crop video to remove NotebookLM watermark (8% off edges)
+    # Crop bottom 10% of video to remove NotebookLM watermark
     if video_path:
         import subprocess
         cropped_path = media_path.parent / "video_cropped.mp4"
         if not cropped_path.exists():
-            print(f"  ✂️  Cropping video to remove watermark...")
+            print(f"  ✂️  Cropping bottom 10% to remove watermark...")
             subprocess.run(
                 ["ffmpeg", "-y", "-i", str(media_path),
-                 "-vf", "crop=in_w*0.92:in_h*0.92:in_w*0.04:in_h*0.04,scale=1280:720",
+                 "-vf", "crop=in_w:in_h*0.90:0:0,scale=1280:720",
                  "-c:v", "libx264", "-preset", "fast", "-crf", "20",
                  "-c:a", "copy", str(cropped_path)],
                 capture_output=True,
