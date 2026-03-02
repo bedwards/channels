@@ -39,6 +39,22 @@ format:
   image_style: charcoal
   target_word_count: 2500
 
+image_style:
+  # Gemini prompt guidelines for this publication
+  prompt_style: >
+    Dark, moody editorial illustration. Muted palette: charcoal, deep navy,
+    burnt orange accents. Abstract and conceptual, not literal. Sophisticated,
+    minimalist. No text, no words, no letters. Dark background tones.
+  # ImageMagick post-processing pipeline
+  postprocess:
+    crop: "1200x630"              # Social preview / Open Graph dimensions
+    chrome_filter:
+      saturation: 60              # -modulate 95,60,100 (desaturate 40%)
+      contrast: 15                # -brightness-contrast 10x15
+    vignette:
+      level: "5%,65%"             # Radial gradient mask levels
+    background: "#171717"         # Edge/corner background color
+
 publish:
   plugin: substack
   subdomain: "materialrecord"

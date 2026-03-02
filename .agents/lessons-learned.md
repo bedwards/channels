@@ -97,3 +97,5 @@ Never use: delve, unpack, impactful, synergy, game-changer, paradigm shift, robu
 13. **Data stack is polars + altair + plotly**, not pandas + matplotlib. Check `pyproject.toml` in graphyard for exact deps.
 14. **Every Substack article needs a Gemini-generated header image.** No exceptions.
 15. **Each publication sticks to ONE post type** (text, audio, video, etc.). Assigned at channel config level. Currently all text, but designed for future type diversity.
+16. **Substack publishing process:** Agent creates the draft via browser automation (title, subtitle, body) and saves it as a Substack draft. Agent generates/processes the header image via Gemini + ImageMagick and saves it to `data/output/<channel>/<date>/header.png`. User adds the header image manually in the Substack editor and hits Publish. Browser automation can't reliably upload files to Substack.
+17. **Image pipeline per publication:** Each channel YAML has an `image_style` section with `prompt_style` (Gemini prompt guidelines) and `postprocess` (ImageMagick pipeline: crop, chrome filter, vignette, background color). This ensures visual consistency within each publication.
