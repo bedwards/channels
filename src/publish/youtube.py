@@ -19,7 +19,10 @@ from .base import BasePublisher
 class YouTubePublisher(BasePublisher):
     """Publishes videos to YouTube via Data API v3."""
 
-    SCOPES = ["https://www.googleapis.com/auth/youtube.upload"]
+    SCOPES = [
+        "https://www.googleapis.com/auth/youtube.upload",
+        "https://www.googleapis.com/auth/youtube",
+    ]
     TOKEN_PATH = Path(__file__).parent.parent.parent / "tokens" / "youtube.json"
 
     def publish(self, piece: ContentPiece) -> Optional[PublishRecord]:

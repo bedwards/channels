@@ -103,14 +103,13 @@ def cmd_verify(args):
 
 def cmd_publish(args):
     """Publish a completed piece to its channel."""
+    import uuid
+    from pathlib import Path
     from src.core.config import ConfigLoader
-    from src.core.database import Database
-    from src.core.models import ContentPiece, ContentStatus
+    from src.core.models import ContentPiece, Platform
     from src.core.registry import PluginRegistry
 
     config = ConfigLoader()
-    db = Database()
-
     channel_config = config.load_channel(args.channel)
     publisher_name = channel_config["publish"]["plugin"]
     publisher = PluginRegistry.create("publisher", publisher_name)
@@ -120,34 +119,69 @@ def cmd_publish(args):
         print(f"   Set up your credentials in .env")
         return
 
-    # Get pending pieces
-    pending = db.get_pending_pieces(args.channel)
-    if not pending:
-        print(f"No pending pieces for {args.channel}")
+    video_path = getattr(args, "video", None)
+    audio_path = getattr(args, "audio", None)
+
+    if not video_path and not audio_path:
+        print(f"❌ Provide --video or --audio path")
         return
 
-    piece_row = pending[0]
-    print(f"📤 Publishing: {piece_row['title']}")
+    media_path = Path(video_path or audio_path)
+    if not media_path.exists():
+        print(f"❌ File not found: {media_path}")
+        return
 
-    # Build ContentPiece from row
+    # Auto-detect title/subtitle from draft.md in same directory
+    draft_path = media_path.parent / "draft.md"
+    title = "Untitled"
+    subtitle = ""
+    if draft_path.exists():
+        for line in draft_path.read_text().split("\n")[:10]:
+            line = line.strip()
+            if line.startswith("# ") and not line.startswith("## "):
+                title = line[2:].strip()
+            elif title != "Untitled" and line and not line.startswith("#"):
+                subtitle = line.strip("*").strip()
+                break
+
+    print(f"\n{'═' * 60}")
+    print(f"  📤 Publishing to {channel_config['name']}")
+    print(f"{'═' * 60}")
+    print(f"  📹 Video: {media_path} ({media_path.stat().st_size / 1024 / 1024:.1f} MB)")
+    print(f"  📝 Title: {title}")
+    print(f"  📄 Subtitle: {subtitle}")
+
+    # Auto-extract thumbnail from video with ffmpeg (5s in, past fade-in)
+    thumbnail_path = media_path.parent / "thumbnail.jpg"
+    if video_path and not thumbnail_path.exists():
+        import subprocess
+        print(f"  🖼️  Extracting thumbnail at 5s...")
+        subprocess.run(
+            ["ffmpeg", "-ss", "5", "-i", str(media_path),
+             "-vframes", "1", "-update", "1", "-q:v", "2",
+             str(thumbnail_path)],
+            capture_output=True,
+        )
+        if thumbnail_path.exists():
+            print(f"  ✅ Thumbnail: {thumbnail_path}")
+        else:
+            print(f"  ⚠️  Thumbnail extraction failed")
+
     piece = ContentPiece(
-        id=piece_row["id"],
-        channel_slug=piece_row["channel_slug"],
-        title=piece_row["title"],
-        subtitle=piece_row.get("subtitle", ""),
-        formatted_content=piece_row.get("formatted_content", ""),
-        draft_content=piece_row.get("draft_content", ""),
-        image_path=piece_row.get("image_path"),
-        video_path=args.video if hasattr(args, "video") and args.video else piece_row.get("video_path"),
-        audio_path=args.audio if hasattr(args, "audio") and args.audio else piece_row.get("audio_path"),
+        id=str(uuid.uuid4()),
+        channel_slug=args.channel,
+        title=title,
+        subtitle=subtitle,
+        video_path=str(video_path) if video_path else None,
+        audio_path=str(audio_path) if audio_path else None,
+        image_path=str(thumbnail_path) if thumbnail_path.exists() else None,
     )
 
     record = publisher.publish(piece)
     if record:
-        db.update_piece_status(piece.id, ContentStatus.PUBLISHED)
-        print(f"✅ Published: {record.publish_url}")
+        print(f"  ✅ Published: {record.publish_url}")
     else:
-        print(f"❌ Publishing failed")
+        print(f"  ❌ Publishing failed")
 
 
 def cmd_channels(args):
