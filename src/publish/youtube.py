@@ -158,20 +158,101 @@ class YouTubePublisher(BasePublisher):
             return None
 
     def _build_description(self, piece: ContentPiece) -> str:
-        """Build YouTube video description."""
-        desc = piece.subtitle or ""
+        """Build a rich YouTube video description.
+
+        Structure:
+        1. Above-the-fold hook (first 2-3 lines — visible before "Show more")
+        2. Key topics / section breakdown
+        3. Source credits with links
+        4. Channel info + subscribe CTA
+        5. SEO hashtags
+        """
+        import re
+        lines = []
+
+        # 1. Above-the-fold hook — subtitle + opening punch
+        if piece.subtitle:
+            lines.append(piece.subtitle)
+            lines.append("")
+
+        # Extract opening insight from draft (first non-header paragraph)
+        if piece.draft_content:
+            for para in piece.draft_content.split("\n\n"):
+                para = para.strip()
+                if para and not para.startswith("#") and not para.startswith("**") and not para.startswith("---"):
+                    # Clean markdown
+                    clean = re.sub(r'[*_]', '', para)
+                    if len(clean) > 50:
+                        lines.append(clean[:300])
+                        lines.append("")
+                        break
+
+        # 2. Key topics from section headers
+        if piece.draft_content:
+            headers = re.findall(r'^###?\s+(.+)', piece.draft_content, re.MULTILINE)
+            if headers:
+                lines.append("📋 IN THIS VIDEO:")
+                for h in headers[:8]:
+                    h = h.strip().strip('#').strip()
+                    if h and len(h) > 3:
+                        lines.append(f"• {h}")
+                lines.append("")
+
+        # 3. Source credits
         if piece.source_items:
-            desc += "\n\nSources:\n"
+            lines.append("📌 SOURCES:")
             for item in piece.source_items:
-                desc += f"- {item.title}: {item.url}\n"
-        desc += "\n\nPart of the Lluminate Network"
-        return desc[:5000]  # YouTube max description length
+                if item.url:
+                    lines.append(f"• {item.title}: {item.url}")
+                else:
+                    lines.append(f"• {item.title} ({item.source_id})")
+            lines.append("")
+
+        # 4. Channel branding
+        lines.append("─" * 40)
+        lines.append("")
+        lines.append("Part of the Lluminate Network")
+        lines.append("Independent analysis. No sponsors. No algorithm bait.")
+        lines.append("")
+        lines.append("🔔 Subscribe and turn on notifications")
+        lines.append("💬 Join the conversation in the comments")
+        lines.append("")
+
+        # 5. SEO hashtags
+        tags = self._extract_tags(piece)
+        if tags:
+            hashtags = " ".join(f"#{t.replace(' ', '')}" for t in tags[:15])
+            lines.append(hashtags)
+
+        return "\n".join(lines)[:5000]
 
     def _extract_tags(self, piece: ContentPiece) -> list[str]:
-        """Extract relevant tags from content."""
-        tags = ["analysis", "commentary"]
-        # Add source-derived tags
+        """Extract relevant tags from content and metadata."""
+        import re
+        tags = ["analysis", "commentary", "politics"]
+
+        # Tags from source IDs
         for item in piece.source_items:
             if item.source_id:
                 tags.append(item.source_id.replace("-", " "))
-        return tags[:30]  # YouTube max 30 tags
+
+        # Tags from section headers in draft
+        if piece.draft_content:
+            headers = re.findall(r'^###?\s+(.+)', piece.draft_content, re.MULTILINE)
+            for h in headers:
+                # Extract key nouns/phrases from headers
+                words = h.strip().strip('#').strip().split()
+                for w in words:
+                    w = re.sub(r'[^a-zA-Z]', '', w)
+                    if len(w) > 4 and w.lower() not in ('about', 'their', 'these', 'those', 'which', 'where', 'never', 'actually', 'means'):
+                        tags.append(w.lower())
+
+        # Deduplicate preserving order
+        seen = set()
+        unique = []
+        for t in tags:
+            if t.lower() not in seen:
+                seen.add(t.lower())
+                unique.append(t)
+
+        return unique[:30]

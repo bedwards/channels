@@ -151,6 +151,27 @@ def cmd_publish(args):
     print(f"  📝 Title: {title}")
     print(f"  📄 Subtitle: {subtitle}")
 
+    # Center-crop video to remove NotebookLM watermark (8% off edges)
+    if video_path:
+        import subprocess
+        cropped_path = media_path.parent / "video_cropped.mp4"
+        if not cropped_path.exists():
+            print(f"  ✂️  Cropping video to remove watermark...")
+            subprocess.run(
+                ["ffmpeg", "-y", "-i", str(media_path),
+                 "-vf", "crop=in_w*0.92:in_h*0.92:in_w*0.04:in_h*0.04,scale=1280:720",
+                 "-c:v", "libx264", "-preset", "fast", "-crf", "20",
+                 "-c:a", "copy", str(cropped_path)],
+                capture_output=True,
+            )
+            if cropped_path.exists():
+                # Replace original with cropped
+                media_path.unlink()
+                cropped_path.rename(media_path)
+                print(f"  ✅ Cropped: {media_path} ({media_path.stat().st_size / 1024 / 1024:.1f} MB)")
+            else:
+                print(f"  ⚠️  Crop failed, using original")
+
     # Auto-extract thumbnail from video with ffmpeg (5s in, past fade-in)
     thumbnail_path = media_path.parent / "thumbnail.jpg"
     if video_path and not thumbnail_path.exists():
@@ -167,14 +188,43 @@ def cmd_publish(args):
         else:
             print(f"  ⚠️  Thumbnail extraction failed")
 
+    # Load draft content for description generation
+    draft_content = ""
+    if draft_path.exists():
+        draft_content = draft_path.read_text()
+
+    # Load source items from the sources directory
+    from src.core.models import SourceItem
+    source_items = []
+    sources_dir = Path("data/sources") / args.channel
+    if sources_dir.exists():
+        # Get the most recent date directory
+        date_dirs = sorted(sources_dir.iterdir(), reverse=True)
+        if date_dirs:
+            for sf in sorted(date_dirs[0].glob("source_*.md")):
+                src_text = sf.read_text()
+                src_title = src_text.split("\n")[0].lstrip("# ").strip()
+                src_url = ""
+                for sline in src_text.split("\n"):
+                    if sline.startswith("**URL:**"):
+                        src_url = sline.replace("**URL:**", "").strip()
+                    elif sline.startswith("**Source:**"):
+                        src_id = sline.replace("**Source:**", "").strip()
+                source_items.append(SourceItem(
+                    title=src_title, url=src_url, source_id=src_id,
+                    content="",
+                ))
+
     piece = ContentPiece(
         id=str(uuid.uuid4()),
         channel_slug=args.channel,
         title=title,
         subtitle=subtitle,
+        draft_content=draft_content,
         video_path=str(video_path) if video_path else None,
         audio_path=str(audio_path) if audio_path else None,
         image_path=str(thumbnail_path) if thumbnail_path.exists() else None,
+        source_items=source_items,
     )
 
     record = publisher.publish(piece)
