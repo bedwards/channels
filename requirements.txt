@@ -13,7 +13,7 @@ google-auth-httplib2>=0.2
 google-auth-oauthlib>=1.2
 
 # Substack (unofficial)
-python-substack>=1.0
+python-substack>=0.1.0
 
 # Testing
 pytest>=8.0
