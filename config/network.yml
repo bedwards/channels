@@ -38,3 +38,12 @@ gemini:
 tracking:
   prevent_reuse_on_same_channel: true
   min_days_before_revisit: 30  # Can revisit a source after 30 days
+
+# Graphyard chart integration
+charts:
+  enabled: true
+  default_theme: publication
+  output_formats: [png, svg]
+  output_width: 680
+  output_height: 420
+  output_dpi: 150

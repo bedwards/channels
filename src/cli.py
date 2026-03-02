@@ -353,6 +353,191 @@ def cmd_feedback(args):
         print()
 
 
+def cmd_chart(args):
+    """Graphyard chart tools."""
+    from pathlib import Path
+    from src.charts import GraphyardDB, ChartBuilder, ChartSpec, ChartType
+
+    db = GraphyardDB.from_env()
+    subcmd = getattr(args, "chart_command", None)
+
+    if subcmd == "schemas":
+        if not db.test_connection():
+            print("❌ Cannot connect to graphyard database")
+            return
+
+        schemas = db.list_schemas()
+        print(f"\n{'═' * 50}")
+        print(f"  GRAPHYARD SCHEMAS — {len(schemas)} found")
+        print(f"{'═' * 50}\n")
+        for s in schemas:
+            tables = db.list_tables(s)
+            print(f"  📁 {s} ({len(tables)} tables)")
+
+    elif subcmd == "tables":
+        schema = args.schema
+        if not db.test_connection():
+            print("❌ Cannot connect to graphyard database")
+            return
+
+        tables = db.list_tables(schema)
+        print(f"\n{'═' * 50}")
+        print(f"  TABLES IN {schema} — {len(tables)} found")
+        print(f"{'═' * 50}\n")
+        for t in tables:
+            rows = t.get("row_estimate", "?")
+            print(f"  📊 {t['table_name']:40s} ~{rows:>10} rows")
+
+    elif subcmd == "query":
+        if not db.test_connection():
+            print("❌ Cannot connect to graphyard database")
+            return
+
+        sql = args.sql
+        limit = args.limit
+        # Add LIMIT if not present
+        if "limit" not in sql.lower():
+            sql += f" LIMIT {limit}"
+
+        df = db.query(sql)
+        print(f"\n  📊 {len(df)} rows returned\n")
+        print(df)
+
+    elif subcmd == "test":
+        if not db.test_connection():
+            print("❌ Cannot connect to graphyard database")
+            return
+
+        theme = args.theme
+        output_dir = Path("data/output/test-charts")
+        output_dir.mkdir(parents=True, exist_ok=True)
+
+        print(f"\n{'═' * 60}")
+        print(f"  GENERATING TEST CHARTS (theme: {theme})")
+        print(f"{'═' * 60}\n")
+
+        builder = ChartBuilder(theme=theme)
+
+        # Test 1: Line chart — World GDP trend
+        print("  📈 Test 1: World GDP trend (line chart)...")
+        try:
+            df = db.query("""
+                SELECT year, value / 1e12 as value_trillions
+                FROM public.world_data
+                WHERE indicator_code = 'NY.GDP.MKTP.CD'
+                  AND year BETWEEN 1960 AND 2023
+                  AND value IS NOT NULL
+                ORDER BY year
+            """)
+            if len(df) > 0:
+                chart = builder.line(
+                    df, x="year", y="value_trillions",
+                    title="World GDP Over Time",
+                    y_label="GDP (Trillions USD)",
+                    x_label="Year",
+                    source_note="World Bank WDI",
+                )
+                paths = builder.save(chart, output_dir / "test_line_world_gdp")
+                print(f"     ✅ Saved: {', '.join(str(p) for p in paths)}")
+            else:
+                print("     ⚠️  No data returned for world GDP query")
+        except Exception as e:
+            print(f"     ❌ Failed: {e}")
+
+        # Test 2: Bar chart — Top economies
+        print("  📊 Test 2: Top 10 economies (horizontal bar)...")
+        try:
+            df = db.query("""
+                SELECT e.entity_name, d.value / 1e12 as gdp_trillions
+                FROM public.country_data d
+                JOIN public.entities e ON d.entity_code = e.entity_code
+                WHERE d.indicator_code = 'NY.GDP.MKTP.CD'
+                  AND d.year = 2022
+                  AND d.value IS NOT NULL
+                ORDER BY d.value DESC
+                LIMIT 10
+            """)
+            if len(df) > 0:
+                chart = builder.horizontal_bar(
+                    df, x="gdp_trillions", y="entity_name",
+                    title="World's Largest Economies (2022)",
+                    x_label="GDP (Trillions USD)",
+                    source_note="World Bank WDI",
+                )
+                paths = builder.save(chart, output_dir / "test_hbar_top_economies")
+                print(f"     ✅ Saved: {', '.join(str(p) for p in paths)}")
+            else:
+                print("     ⚠️  No data returned for top economies query")
+        except Exception as e:
+            print(f"     ❌ Failed: {e}")
+
+        # Test 3: Multi-line — Country comparison
+        print("  📈 Test 3: US vs China GDP comparison (multi-line)...")
+        try:
+            df = db.query("""
+                SELECT e.entity_name as country, d.year,
+                       d.value / 1e12 as gdp_trillions
+                FROM public.country_data d
+                JOIN public.entities e ON d.entity_code = e.entity_code
+                WHERE d.indicator_code = 'NY.GDP.MKTP.CD'
+                  AND d.entity_code IN ('USA', 'CHN')
+                  AND d.year BETWEEN 1990 AND 2023
+                  AND d.value IS NOT NULL
+                ORDER BY d.year
+            """)
+            if len(df) > 0:
+                chart = builder.line(
+                    df, x="year", y="gdp_trillions", color="country",
+                    title="US vs China: GDP Over Time",
+                    y_label="GDP (Trillions USD)",
+                    x_label="Year",
+                    source_note="World Bank WDI",
+                )
+                paths = builder.save(chart, output_dir / "test_line_us_china")
+                print(f"     ✅ Saved: {', '.join(str(p) for p in paths)}")
+            else:
+                print("     ⚠️  No data returned for US/China comparison")
+        except Exception as e:
+            print(f"     ❌ Failed: {e}")
+
+        # Test 4: Bar with negative values — GDP growth
+        print("  📊 Test 4: World GDP growth rate (bar with negatives)...")
+        try:
+            df = db.query("""
+                SELECT year, value as growth_rate
+                FROM public.world_data
+                WHERE indicator_code = 'NY.GDP.MKTP.KD.ZG'
+                  AND year BETWEEN 2000 AND 2023
+                  AND value IS NOT NULL
+                ORDER BY year
+            """)
+            if len(df) > 0:
+                chart = builder.bar(
+                    df, x="year", y="growth_rate",
+                    title="World GDP Growth Rate",
+                    y_label="Annual Growth (%)",
+                    x_label="Year",
+                    highlight_negative=True,
+                    source_note="World Bank WDI",
+                )
+                paths = builder.save(chart, output_dir / "test_bar_gdp_growth")
+                print(f"     ✅ Saved: {', '.join(str(p) for p in paths)}")
+            else:
+                print("     ⚠️  No data returned for GDP growth query")
+        except Exception as e:
+            print(f"     ❌ Failed: {e}")
+
+        print(f"\n  📂 Output: {output_dir.resolve()}")
+
+    else:
+        print("Usage: python -m src.cli chart {schemas|tables|query|test}")
+        print()
+        print("  schemas           List all graphyard database schemas")
+        print("  tables [schema]   List tables in a schema (default: public)")
+        print("  query \"SQL\"       Run a query and display results")
+        print("  test [--theme T]  Generate throwaway test charts")
+
+
 def main():
     load_env()
 
@@ -413,6 +598,26 @@ def main():
     feedback_parser.add_argument("--channel", help="Specific channel slug")
     feedback_parser.add_argument("--extract", action="store_true", help="Extract feedback from recent comments")
     feedback_parser.set_defaults(func=cmd_feedback)
+
+    # chart
+    chart_parser = subparsers.add_parser("chart", help="Graphyard chart tools")
+    chart_sub = chart_parser.add_subparsers(dest="chart_command", help="Chart subcommands")
+
+    chart_schemas = chart_sub.add_parser("schemas", help="List graphyard schemas")
+    chart_schemas.set_defaults(func=cmd_chart)
+
+    chart_tables = chart_sub.add_parser("tables", help="List tables in a schema")
+    chart_tables.add_argument("schema", nargs="?", default="public", help="Schema name")
+    chart_tables.set_defaults(func=cmd_chart)
+
+    chart_query = chart_sub.add_parser("query", help="Run a SQL query and display results")
+    chart_query.add_argument("sql", help="SQL query to execute")
+    chart_query.add_argument("--limit", type=int, default=20, help="Max rows to display")
+    chart_query.set_defaults(func=cmd_chart)
+
+    chart_test = chart_sub.add_parser("test", help="Generate throwaway test charts")
+    chart_test.add_argument("--theme", default="publication", help="Chart theme")
+    chart_test.set_defaults(func=cmd_chart)
 
     args = parser.parse_args()
     if not args.command:

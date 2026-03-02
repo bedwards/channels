@@ -54,6 +54,18 @@ class ConfigLoader:
         """Load source stance configuration."""
         return self.load("stances")
 
+    def load_charts_config(self) -> dict[str, Any]:
+        """Load chart generation configuration from network.yml."""
+        network = self.load_network()
+        return network.get("charts", {
+            "enabled": False,
+            "default_theme": "publication",
+            "output_formats": ["png", "svg"],
+            "output_width": 680,
+            "output_height": 420,
+            "output_dpi": 150,
+        })
+
     def load_channel(self, channel_slug: str) -> dict[str, Any]:
         """Load a specific channel configuration."""
         path = self.config_dir / "channels" / f"{channel_slug}.yml"

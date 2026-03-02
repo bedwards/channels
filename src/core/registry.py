@@ -72,3 +72,4 @@ def discover_plugins() -> None:
         substack_essay, image_gen,
     )
     from src.publish import youtube as pub_youtube, substack as pub_substack  # noqa: F401
+    from src.charts import builder as chart_builder  # noqa: F401

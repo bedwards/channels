@@ -99,3 +99,7 @@ Never use: delve, unpack, impactful, synergy, game-changer, paradigm shift, robu
 15. **Each publication sticks to ONE post type** (text, audio, video, etc.). Assigned at channel config level. Currently all text, but designed for future type diversity.
 16. **Substack publishing process:** Agent creates the draft via browser automation (title, subtitle, body) and saves it as a Substack draft. Agent generates/processes the header image via Gemini + ImageMagick and saves it to `data/output/<channel>/<date>/header.png`. User adds the header image manually in the Substack editor and hits Publish. Browser automation can't reliably upload files to Substack.
 17. **Image pipeline per publication:** Each channel YAML has an `image_style` section with `prompt_style` (Gemini prompt guidelines) and `postprocess` (ImageMagick pipeline: crop, chrome filter, vignette, background color). This ensures visual consistency within each publication.
+18. **Charts module uses polars + altair, not pandas + matplotlib.** All queries return `polars.DataFrame`. Convert to pandas only at the altair boundary via `.to_pandas()`. Requires `pyarrow` for interop.
+19. **Altair 5.5+ uses `alt.theme` (singular), not `alt.themes` (plural).** Register with `@alt.theme.register(name, enable=False)`, enable with `alt.theme.enable(name)`.
+20. **Chart CLI:** `python -m src.cli chart {schemas|tables|query|test}` for database exploration and test chart generation.
+21. **Test charts go to `data/output/test-charts/`.** These are throwaway — don't commit them.
